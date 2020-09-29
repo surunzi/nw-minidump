@@ -9,8 +9,20 @@ program.version(version);
 program
   .command('walk')
   .description('walk minidump file')
-  .action(() => {
-    walk();
+  .option('-b, --binary <path>', 'path of the binary')
+  .option('-o, --output <path>', 'path of the output')
+  .action(({ binary, output }, cmdObj) => {
+    try {
+      if (!cmdObj && !cmdObj[0]) {
+        throw Error('dmp file path missing');
+      }
+      walk(cmdObj[0], {
+        binary,
+        output,
+      });
+    } catch (e) {
+      console.log('error: ' + e.message);
+    }
   });
 
 program
