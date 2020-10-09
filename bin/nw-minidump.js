@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+const path = require('path');
 const program = require('commander');
 const walk = require('../lib/walk');
+const dump = require('../lib/dump');
 const version = require('../package.json').version;
 
 program.version(version);
@@ -16,8 +18,40 @@ program
       if (!cmdObj && !cmdObj[0]) {
         throw Error('dmp file path missing');
       }
-      walk(cmdObj[0], {
+      let dmp = cmdObj[0];
+      if (!output) {
+        output = dmp + '.txt';
+      }
+      dmp = path.resolve(process.cwd(), dmp);
+      output = path.resolve(process.cwd(), output);
+      if (binary) {
+        binary = path.resolve(process.cwd(), binary || '');
+      }
+      walk(dmp, {
         binary,
+        output,
+      });
+    } catch (e) {
+      console.log('error: ' + e.message);
+    }
+  });
+
+program
+  .command('dump')
+  .description('dump binary symbol')
+  .option('-o, --output <path>', 'path of the output')
+  .action(({ output }, cmdObj) => {
+    try {
+      if (!cmdObj && !cmdObj[0]) {
+        throw Error('binary file path missing');
+      }
+      let binary = cmdObj[0];
+      if (!output) {
+        output = binary + '.sym';
+      }
+      binary = path.resolve(process.cwd(), binary);
+      output = path.resolve(process.cwd(), output);
+      dump(binary, {
         output,
       });
     } catch (e) {
