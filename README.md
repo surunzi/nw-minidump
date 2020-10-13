@@ -11,5 +11,8 @@ npm i -g nw-minidump
 ## Usage
 
 ```bash
-nw-minidump walk xxx.dmp --binary xxx.node
+# Generate symbol files.
+nw-minidump dump xxx.node
+# Walk minidump files.
+nw-minidump walk xxx.dmp --binary xxx.node --symbol xxx.sym
 ```

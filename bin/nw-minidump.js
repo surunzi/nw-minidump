@@ -13,8 +13,9 @@ program
   .command('walk')
   .description('walk minidump file')
   .option('-b, --binary <path...>', 'path of the binary')
+  .option('-s, --symbol <symbol...>', 'path of the symbol')
   .option('-o, --output <path>', 'path of the output')
-  .action(({ binary, output }, cmdObj) => {
+  .action(({ binary, symbol, output }, cmdObj) => {
     try {
       if (!cmdObj && !cmdObj[0]) {
         throw Error('dmp file path missing');
@@ -30,9 +31,16 @@ program
           path.resolve(process.cwd(), binary || '')
         );
       }
+      if (symbol) {
+        symbol = map(symbol, (symbol) =>
+          path.resolve(process.cwd(), symbol || '')
+        );
+      }
+
       walk(dmp, {
         binary,
         output,
+        symbol,
       });
     } catch (e) {
       console.log('error: ' + e.message);
