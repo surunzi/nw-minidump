@@ -2,6 +2,7 @@
 
 const path = require('path');
 const program = require('commander');
+const map = require('licia/map');
 const walk = require('../lib/walk');
 const dump = require('../lib/dump');
 const version = require('../package.json').version;
@@ -11,7 +12,7 @@ program.version(version);
 program
   .command('walk')
   .description('walk minidump file')
-  .option('-b, --binary <path>', 'path of the binary')
+  .option('-b, --binary <path...>', 'path of the binary')
   .option('-o, --output <path>', 'path of the output')
   .action(({ binary, output }, cmdObj) => {
     try {
@@ -25,7 +26,9 @@ program
       dmp = path.resolve(process.cwd(), dmp);
       output = path.resolve(process.cwd(), output);
       if (binary) {
-        binary = path.resolve(process.cwd(), binary || '');
+        binary = map(binary, (binary) =>
+          path.resolve(process.cwd(), binary || '')
+        );
       }
       walk(dmp, {
         binary,
