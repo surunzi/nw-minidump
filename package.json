@@ -1,6 +1,6 @@
 {
   "name": "nw-minidump",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "NW.js minidump",
   "main": "index.js",
   "bin": {
